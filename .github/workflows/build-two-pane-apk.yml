@@ -7,6 +7,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      ANDROID_NDK_HOME: /usr/local/lib/android/sdk/ndk/28.0.13004108
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,7 +41,6 @@ jobs:
           cache-dependency-path: deps/rclone-mobile/go.sum
       - name: Build rclone AAR
         env:
-          ANDROID_NDK_HOME: ${{ env.ANDROID_SDK_ROOT }}/ndk/28.0.13004108
           GOTOOLCHAIN: auto
         run: |
           go install golang.org/x/mobile/cmd/gomobile@latest
@@ -48,7 +51,6 @@ jobs:
           cp deps/build/rclone/rclone.aar src/android/app/libs/rclone.aar
       - name: Build native sandbox
         env:
-          ANDROID_NDK_HOME: ${{ env.ANDROID_SDK_ROOT }}/ndk/28.0.13004108
         run: |
           ./deps/build_proot.sh
           ./scripts/prepare_android_sandbox.sh
