@@ -38,7 +38,6 @@ jobs:
           go-version: '1.25.x'
         env:
           GOTOOLCHAIN: auto
-          cache-dependency-path: deps/rclone-mobile/go.sum
       - name: Build rclone AAR
         env:
           GOTOOLCHAIN: auto
@@ -50,7 +49,6 @@ jobs:
           mkdir -p src/android/app/libs
           cp deps/build/rclone/rclone.aar src/android/app/libs/rclone.aar
       - name: Build native sandbox
-        env:
         run: |
           ./deps/build_proot.sh
           ./scripts/prepare_android_sandbox.sh
