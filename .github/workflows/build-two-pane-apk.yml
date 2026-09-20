@@ -29,6 +29,20 @@ jobs:
           sed -i 's/applicationId = "com.openminis.app"/applicationId = "com.openminis.app.twopane"/' src/android/app/build.gradle.kts
           sed -i 's/versionName = "1.13"/versionName = "1.13-twopane"/' src/android/app/build.gradle.kts
           cp src/android/app/provider-customization.properties.example src/android/app/provider-customization.properties
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.25.x'
+          cache-dependency-path: deps/rclone-mobile/go.sum
+      - name: Build rclone AAR
+        env:
+          ANDROID_NDK_HOME: ${{ env.ANDROID_SDK_ROOT }}/ndk/28.0.13004108
+        run: |
+          go install golang.org/x/mobile/cmd/gomobile@latest
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          gomobile init
+          ./deps/build_rclone_android.sh
+          mkdir -p src/android/app/libs
+          cp deps/build/rclone/rclone.aar src/android/app/libs/rclone.aar
       - name: Build native sandbox
         env:
           ANDROID_NDK_HOME: ${{ env.ANDROID_SDK_ROOT }}/ndk/28.0.13004108
