@@ -1,5 +1,6 @@
 name: Build Two-Pane APK
-on: workflow_dispatch
+on:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -20,32 +21,14 @@ jobs:
         run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platforms;android-36" "build-tools;35.0.0" "ndk;28.0.13004108" "cmake;3.22.1"
-      - name: Add manual two-pane setting
+      - name: Apply two-pane patch
+        env:
+          PATCH_GZ_B64: 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
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          a=Path('src/android/app/src/main/java/com/openminis/app/ui/settings/AppearanceScreen.kt')
-          s=a.read_text()
-          s=s.replace('import androidx.compose.material.icons.outlined.Visibility','import androidx.compose.material.icons.outlined.Visibility\nimport androidx.compose.material.icons.outlined.TableView')
-          s=s.replace('const val KEY_LANGUAGE = "app_language"','const val KEY_LANGUAGE = "app_language"\nconst val KEY_FORCE_TWO_PANE = "appearance.force_two_pane"\nfun forceTwoPaneEnabled(context: Context) = getAppearancePrefs(context).getBoolean(KEY_FORCE_TWO_PANE, false)')
-          s=s.replace('var autoGrouping by remember { mutableStateOf(prefs.getBoolean(KEY_AUTO_GROUPING, true)) }','var autoGrouping by remember { mutableStateOf(prefs.getBoolean(KEY_AUTO_GROUPING, true)) }\n    var forceTwoPane by remember { mutableStateOf(prefs.getBoolean(KEY_FORCE_TWO_PANE, false)) }')
-          block='''SettingsSection(header = stringResource(R.string.appearance_section_two_pane), footer = stringResource(R.string.appearance_force_two_pane_footer)) {
-            SettingsSwitchRow(icon = Icons.Outlined.TableView, iconColor = tilePurple, title = stringResource(R.string.appearance_force_two_pane_title), checked = forceTwoPane, onCheckedChange = { forceTwoPane = it; prefs.edit().putBoolean(KEY_FORCE_TWO_PANE, it).apply() }, showDivider = false)
-        }
-
-        '''
-          s=s.replace('        // -- Font Size --', '        '+block+'// -- Font Size --')
-          a.write_text(s)
-          n=Path('src/android/app/src/main/java/com/openminis/app/ui/navigation/ChatSplitScaffold.kt')
-          s=n.read_text().replace('import com.openminis.app.R','import com.openminis.app.R\nimport com.openminis.app.ui.settings.forceTwoPaneEnabled')
-          old='''    return expandedWidth && nonCompactHeight'''
-          new='''    val mediumWidth = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
-    return (expandedWidth || (forceTwoPaneEnabled(LocalContext.current) && mediumWidth)) && nonCompactHeight'''
-          n.write_text(s.replace(old,new))
-          for f,needle,text in [('values/strings.xml','    <string name="appearance_section_font_size">','    <string name="appearance_section_two_pane">Two-Pane Layout</string>\n    <string name="appearance_force_two_pane_title">Enable on foldables</string>\n    <string name="appearance_force_two_pane_footer">Uses two panes in windows at least 600dp wide. Restart Minis after changing.</string>\n'),('values-zh/strings.xml','    <string name="appearance_section_font_size">','    <string name="appearance_section_two_pane">双栏布局</string>\n    <string name="appearance_force_two_pane_title">在折叠屏上启用</string>\n    <string name="appearance_force_two_pane_footer">窗口宽度至少为 600dp 时启用双栏。更改后请重启 Minis。</string>\n')]:
-            p=Path('src/android/app/src/main/res')/f; q=p.read_text(); p.write_text(q.replace(needle,text+needle))
-          b=Path('src/android/app/build.gradle.kts'); s=b.read_text().replace('applicationId = "com.openminis.app"','applicationId = "com.openminis.app.twopane"').replace('versionName = "1.13"','versionName = "1.13-twopane"'); b.write_text(s)
-          PY
+          printf '%s' "$PATCH_GZ_B64" | base64 -d | gzip -d > /tmp/twopane.patch
+          git apply /tmp/twopane.patch
+          sed -i 's/applicationId = "com.openminis.app"/applicationId = "com.openminis.app.twopane"/' src/android/app/build.gradle.kts
+          sed -i 's/versionName = "1.13"/versionName = "1.13-twopane"/' src/android/app/build.gradle.kts
           cp src/android/app/provider-customization.properties.example src/android/app/provider-customization.properties
       - name: Build native sandbox
         env:
